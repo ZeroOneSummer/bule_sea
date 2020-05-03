@@ -1,7 +1,7 @@
 package com.free.zero.server.controller;
 
 import com.free.zero.server.pojo.OrderEntity;
-import com.free.zero.server.server.MixServer;
+import com.free.zero.server.server.OrderService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,8 +11,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.Date;
-import java.util.List;
 import java.util.Random;
 
 /**
@@ -24,21 +22,21 @@ import java.util.Random;
 public class OrderController {
 
     @Autowired
-    private MixServer mixServer;
+    private OrderService orderService;
 
     @GetMapping("query/{id}")
     @ResponseBody
-    public List<OrderEntity> getOrders(@PathVariable(name = "id") int id){
-        return mixServer.queryOrderList(new OrderEntity().setId(id));
+    public OrderEntity getOrders(@PathVariable(name = "id") int id){
+        return orderService.getOrder(new OrderEntity().setId(id));
     }
 
     @GetMapping("/add")
     @ResponseBody
     public String addOrder(){
-        OrderEntity orderEntity = new OrderEntity()
-                                .setOrderNo("YG" + new Date().getTime() + new Random().nextInt(3))
-                                .setGoodsName("友谊729-" + new Random().nextInt(3));
-        int ret = mixServer.addOrder(orderEntity);
+        int ret = orderService.insertOrder(new OrderEntity()
+                .setStatus(0)
+                .setOrderNo("20200503"+String.format("%06d", new Random().nextInt(100000)))
+                .setGoodsName("芒果欧蕾-大杯"));
         Assert.state(ret == 1, "添加失败");
         return "OK";
     }
