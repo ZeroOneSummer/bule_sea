@@ -24,6 +24,10 @@ class ServiceTests {
         PageInfo<OrderEntity> p1 = orderService.getOrders(1, 50);
         log.info(JSON.toJSONString(p1.getList()));
 
+        //自定义script查询
+        PageInfo<OrderEntity> ps = orderService.getOrdersForScript(1, 50, new OrderEntity().setOrderNo("20200503072423"));
+        log.info(JSON.toJSONString(ps.getList()));
+
         //Select
         PageInfo<OrderEntity> p2 = orderService.getAll();
         log.info(JSON.toJSONString(p2.getList()));

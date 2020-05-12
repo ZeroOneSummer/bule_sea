@@ -8,6 +8,7 @@ import com.github.pagehelper.PageInfo;
  */
 public interface OrderService  {
     PageInfo<OrderEntity> getOrders(int index, int size);
+    PageInfo<OrderEntity> getOrdersForScript(int index, int size, OrderEntity entity);
     PageInfo<OrderEntity> getAll();
     OrderEntity getOrderById(int id);
     OrderEntity getOrder(OrderEntity entity);

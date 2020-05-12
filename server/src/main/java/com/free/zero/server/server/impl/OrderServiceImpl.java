@@ -27,6 +27,12 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public PageInfo<OrderEntity> getOrdersForScript(int index, int size, OrderEntity entity) {
+        PageHelper.startPage(index, size);
+        return PageInfo.of(orderMapper.getOrdersForScript(entity));
+    }
+
+    @Override
     public PageInfo<OrderEntity> getAll() {
         return PageInfo.of(orderMapper.selectAll());
     }
