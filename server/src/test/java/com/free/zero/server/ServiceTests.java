@@ -3,7 +3,9 @@ package com.free.zero.server;
 import com.alibaba.fastjson.JSON;
 import com.free.zero.server.pojo.OrderEntity;
 import com.free.zero.server.server.OrderService;
+import com.free.zero.server.utils.RedisUtils;
 import com.github.pagehelper.PageInfo;
+import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,12 @@ class ServiceTests {
 
     @Autowired
     private OrderService orderService;
+
+    @Autowired
+    private RedisUtils redisUtils;
+
+    private final static Gson gson = new Gson();
+    private final static String TEST_KEY = "zero_redis_test_key";
 
     @Test
     void mixOrderTest() {
@@ -44,7 +52,22 @@ class ServiceTests {
                                             .setOrderNo("20200503"+String.format("%06d", new Random().nextInt(100000)))
                                             .setGoodsName("芒果欧蕾-大杯"));
         log.info(String.valueOf(ret));
+    }
 
+
+    //通过缓存查
+    @Test
+    void optSelectTestByGuavaCache() {
+        //Select
+        OrderEntity entity = redisUtils.get(TEST_KEY, OrderEntity.class);
+        log.info(gson.toJson(entity));
+    }
+
+    @Test
+    void optSelectTestByRedisCache() {
+        //Select
+        OrderEntity entity = redisUtils.get(TEST_KEY, OrderEntity.class);
+        log.info(gson.toJson(entity));
     }
 
 }
