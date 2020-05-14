@@ -19,8 +19,9 @@ import javax.persistence.Table;
 public class OrderEntity extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "JDBC")
-    private Integer id;       // "JDBC"-返回主键id
+    private Integer id;       // "JDBC"-返回主键id，必须是包装类
     private String orderNo;
     private String goodsName;
     private Integer status;
+    private Integer stock;
 }

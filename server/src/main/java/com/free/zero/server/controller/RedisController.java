@@ -1,5 +1,8 @@
 package com.free.zero.server.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.free.zero.server.pojo.OrderEntity;
+import com.free.zero.server.server.OrderService;
 import com.free.zero.server.utils.DistributedRedisLock;
 import com.free.zero.server.utils.RedisUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +25,9 @@ public class RedisController {
 
     @Autowired
     private DistributedRedisLock redisLock;
+
+    @Autowired
+    private OrderService orderService;
 
     private final static String ITEM_COUNT = "item:count";
     private final static String LOCK_KEY = "item:count:lock";
@@ -88,6 +94,18 @@ public class RedisController {
         }
         log.info(Thread.currentThread().getName() + ", result: " + result);
         return result + ": " + getCount();
+    }
+
+    /**
+     * guava缓存
+     * http://localhost:8088/order/guava
+     */
+    @RequestMapping("/order/guava")
+    public OrderEntity optSelectTestByGuavaCache() {
+        //GuavaCache
+        OrderEntity ordersByGuava = orderService.getOrdersByGuava("redis-20200513");
+        log.info(JSON.toJSONString(ordersByGuava));
+        return ordersByGuava;
     }
 
 }

@@ -3,7 +3,6 @@ package com.free.zero.server;
 import com.alibaba.fastjson.JSON;
 import com.free.zero.server.pojo.OrderEntity;
 import com.free.zero.server.server.OrderService;
-import com.free.zero.server.utils.RedisUtils;
 import com.github.pagehelper.PageInfo;
 import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
@@ -20,11 +19,7 @@ class ServiceTests {
     @Autowired
     private OrderService orderService;
 
-    @Autowired
-    private RedisUtils redisUtils;
-
-    private final static Gson gson = new Gson();
-    private final static String TEST_KEY = "zero_redis_test_key";
+    private Gson gson = new Gson();
 
     @Test
     void mixOrderTest() {
@@ -57,17 +52,33 @@ class ServiceTests {
 
     //通过缓存查
     @Test
+    void addOrderTest() {
+        int ret = orderService.insertOrder(new OrderEntity()
+                .setStatus(0)
+                .setOrderNo("redis-20200513")
+                .setGoodsName("芝士莓莓-大杯")
+                .setStock(100));
+        log.info(String.valueOf(ret));
+    }
+
+    @Test
     void optSelectTestByGuavaCache() {
-        //Select
-        OrderEntity entity = redisUtils.get(TEST_KEY, OrderEntity.class);
-        log.info(gson.toJson(entity));
+        // GuavaCache见controller
+        // http://localhost:8088/order/guava
     }
 
     @Test
     void optSelectTestByRedisCache() {
-        //Select
-        OrderEntity entity = redisUtils.get(TEST_KEY, OrderEntity.class);
-        log.info(gson.toJson(entity));
+        //RedisCache
+        OrderEntity ordersByRedis = orderService.getOrdersByRedis("redis-20200513");
+        log.info(gson.toJson(ordersByRedis));
+    }
+
+    @Test
+    void optSelectTest() {
+        //select
+        OrderEntity orders = orderService.getOrder(new OrderEntity().setOrderNo("redis-20200513"));
+        log.info(gson.toJson(orders));
     }
 
 }
